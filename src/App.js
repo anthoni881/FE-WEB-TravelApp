@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import { Route, BrowserRouter, Redirect } from "react-router-dom";
+import LoginRegister from "./pages/LoginRegister";
+import LongLat from "./pages/LongLat";
+import LoginAdmin from "./pages/LoginAdmin";
+import Home from "./pages/Home";
+const App = () => {
+  const [local, setLocal] = useState(false);
 
-function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Route exact path={"/"} component={LoginRegister}>
+          <LoginRegister />
+        </Route>
+        <Route path={"/longlat"} component={LongLat}>
+          <LongLat />
+        </Route>
+        <Route path={"/login"} component={LoginAdmin}>
+          <LoginAdmin setLocal={setLocal} />
+        </Route>
+        {local || localStorage.getItem("token") ? (
+          <Route path={"/home"} component={Home}>
+            <Home />
+          </Route>
+        ) : (
+          <Redirect to="/login" />
+        )}
+      </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;
