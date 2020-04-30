@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Verification from "./Verification";
-import axios from "axios";
+import Manage from "./Manage";
+import { Redirect } from "react-router-dom";
+
 const Home = () => {
+  const [redirect, setRedirect] = useState(false);
+  const [menu, setMenu] = useState(true);
   const style = {
     button: {
       width: "100px",
@@ -33,36 +37,59 @@ const Home = () => {
       background: "white",
     },
   };
+  const handleLogout = () => {
+    localStorage.clear();
+    setRedirect(true);
+  };
+  const handleVerification = () => {
+    setMenu(true);
+  };
+  const handleManage = () => {
+    setMenu(false);
+  };
   return (
-    <div
-      style={{
-        background: "#5406FF",
-        height: "100vh",
-      }}
-    >
-      <div style={style.navbar}>
-        <p style={{ fontSize: "24px", marginLeft: "15px" }}>
-          TravelApp Management
-        </p>
-        <div style={{ display: "flex" }}>
-          <p style={{ alignItems: "center", display: "flex" }}>Hi, Admin</p>
-          <button style={style.button}>Logout</button>
+    <>
+      {redirect ? (
+        <Redirect to="/login" />
+      ) : (
+        <div
+          style={{
+            background: "#5406FF",
+            height: "100vh",
+          }}
+        >
+          <div style={style.navbar}>
+            <p style={{ fontSize: "24px", marginLeft: "15px" }}>
+              TravelApp Management
+            </p>
+            <div style={{ display: "flex" }}>
+              <p style={{ alignItems: "center", display: "flex" }}>Hi, Admin</p>
+              <button style={style.button} onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              background: "rgb(84, 6, 255)",
+            }}
+          >
+            <div style={{ display: "flex" }}>
+              <button style={style.buttonMenu} onClick={handleVerification}>
+                Verification Partner
+              </button>
+              <button style={style.buttonMenu} onClick={handleManage}>
+                Manage Partner
+              </button>
+            </div>
+            {menu ? <Verification /> : <Manage />}
+          </div>
         </div>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex" }}>
-          <button style={style.buttonMenu}>Verification Partner</button>
-          <button style={style.buttonMenu}>Manage Partner</button>
-        </div>
-        <Verification />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 export default Home;
